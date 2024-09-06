@@ -13,6 +13,7 @@ import {
 import { login } from '../services/AuthService'; // Import login function
 import { useDispatch } from 'react-redux'; // Import useDispatch
 import { loginSuccess } from '../state/slices/authSlice'; // Import the loginSuccess action
+import CommonButton from '../components/CommonButton';
 
 const LoginScreen = () => {
   const [username, setUsername] = useState('');
@@ -62,10 +63,14 @@ const LoginScreen = () => {
         autoCapitalize="none" // Optional, in case you don't want to capitalize passwords
       />
       <View style={styles.buttonContainer}>
-        <Button
+        {/* <Button
           title="Login"
           onPress={handleLogin}
           color="#F0EBD8"
+        /> */}
+        <CommonButton
+          onPress={handleLogin}
+          buttonText="Login"
         />
       </View>
     </View>

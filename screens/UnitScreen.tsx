@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { StyleSheet, Text, View, StatusBar } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import LocationButton from '../components/LocationButton';
+import CommonButton from '../components/CommonButton';
 import * as Location from 'expo-location';
 import * as mgrs from 'mgrs';
 import { RootState } from '../state/store';
@@ -48,7 +48,10 @@ const UnitScreen: React.FC = () => {
         </Text>
       </View>
       <Text style={styles.mgrsText}>MGRS: {mgrsCoord}</Text>
-      <LocationButton onPress={sendCoordinates} />
+      <CommonButton
+        onPress={sendCoordinates}
+        buttonText="Resupply request at this location"
+      />
     </View>
   );
 };

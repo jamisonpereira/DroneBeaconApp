@@ -1,17 +1,18 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity, Text } from 'react-native';
 
-interface LocationButtonProps {
+interface CommonButtonProps {
   onPress: () => void;
+  buttonText: string;
 }
 
-const LocationButton: React.FC<LocationButtonProps> = ({ onPress }) => {
+const CommonButton: React.FC<CommonButtonProps> = ({ onPress, buttonText }) => {
   return (
     <TouchableOpacity
       style={styles.button}
       onPress={onPress}
     >
-      <Text style={styles.buttonText}>Request resupply at this location</Text>
+      <Text style={styles.buttonText}>{buttonText}</Text>
     </TouchableOpacity>
   );
 };
@@ -30,4 +31,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LocationButton;
+export default CommonButton;
