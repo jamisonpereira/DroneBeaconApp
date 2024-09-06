@@ -3,13 +3,13 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { Provider } from 'react-redux';
 import store from './state/store';
-import TabNavigator from './navigation/TabNavigator';
+import AppStackNavigator from './navigation/AppStackNavigator'; // Import the stack navigator
 
 export default function App() {
   return (
     <Provider store={store}>
       <NavigationContainer>
-        <TabNavigator />
+        <AppStackNavigator />
       </NavigationContainer>
     </Provider>
   );
