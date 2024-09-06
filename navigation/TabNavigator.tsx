@@ -8,7 +8,7 @@ export type RootTabParamList = {
   Base: undefined; // No params for Base
 };
 
-const Tab = createBottomTabNavigator();
+const Tab = createBottomTabNavigator<RootTabParamList>();
 
 const TabNavigator: React.FC = () => {
   return (

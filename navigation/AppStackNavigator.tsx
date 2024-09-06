@@ -7,12 +7,12 @@ import { useDispatch, useSelector } from 'react-redux'; // Import useDispatch an
 import { RootState } from '../state/store'; // Import the RootState type
 import { setAuthentication } from '../state/slices/authSlice'; // Import the action
 
-// export type RootStackParamList = {
-//   Login: undefined; // No params for Login
-//   Main: undefined; // No params for Main
-// };
+export type AppStackParamList = {
+  Login: undefined; // No params for Login
+  Main: undefined; // No params for Main
+};
 
-const Stack = createStackNavigator(); // Use the RootStackParamList type
+const Stack = createStackNavigator<AppStackParamList>();
 
 const AppStackNavigator = () => {
   const isAuthenticated = useSelector(

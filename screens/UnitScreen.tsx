@@ -1,25 +1,44 @@
 import React, { useEffect } from 'react';
-import { StyleSheet, Text, View, StatusBar } from 'react-native';
+import { StyleSheet, Text, View, StatusBar, Alert } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import CommonButton from '../components/CommonButton';
 import * as Location from 'expo-location';
 import * as mgrs from 'mgrs';
 import { RootState } from '../state/store';
 import { setLocation } from '../state/slices/locationSlice';
+import { requestResupply } from '../services/ApiService'; // Import the API service function
+import { useNavigation } from '@react-navigation/native'; // Import navigation
+import type { StackNavigationProp } from '@react-navigation/stack';
+import { AppStackParamList } from '../navigation/AppStackNavigator'; // Import the type for navigation
+
+type UnitScreenNavigationProp = StackNavigationProp<AppStackParamList, 'Login'>;
 
 const UnitScreen: React.FC = () => {
   const dispatch = useDispatch();
+  const navigation = useNavigation<UnitScreenNavigationProp>(); // Type the navigation
+
   const {
     latitude,
     longitude,
     mgrs: mgrsCoord,
   } = useSelector((state: RootState) => state.location);
 
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.auth.isAuthenticated
+  ); // Check authentication state
+
   useEffect(() => {
+    // If user is not authenticated, navigate to LoginScreen
+    if (!isAuthenticated) {
+      navigation.navigate('Login');
+      return;
+    }
+
     (async () => {
       try {
         let { status } = await Location.requestForegroundPermissionsAsync();
         if (status !== 'granted') {
+          console.error('Permission to access location was denied');
           return;
         }
 
@@ -32,10 +51,34 @@ const UnitScreen: React.FC = () => {
         console.error('Error getting location or converting to MGRS:', error);
       }
     })();
-  }, [dispatch]);
+  }, [dispatch, isAuthenticated, navigation]);
 
-  const sendCoordinates = () => {
-    console.log('Coordinates sent:', { latitude, longitude, mgrsCoord });
+  const handleResupplyRequest = async () => {
+    try {
+      console.log('Sending resupply request with location:', {
+        latitude,
+        longitude,
+      });
+
+      // Call the API service to make the resupply request
+      const response = await requestResupply(
+        latitude,
+        longitude,
+        ['item1', 'item2'],
+        'normal'
+      );
+
+      Alert.alert(
+        'Resupply Request',
+        'Request sent successfully! Message: ' + response.message
+      );
+    } catch (error) {
+      console.error('Failed to send resupply request:', error);
+      Alert.alert(
+        'Resupply Request',
+        'Failed to send request. Please try again.'
+      );
+    }
   };
 
   return (
@@ -49,7 +92,7 @@ const UnitScreen: React.FC = () => {
       </View>
       <Text style={styles.mgrsText}>MGRS: {mgrsCoord}</Text>
       <CommonButton
-        onPress={sendCoordinates}
+        onPress={handleResupplyRequest}
         buttonText="Resupply request at this location"
       />
     </View>

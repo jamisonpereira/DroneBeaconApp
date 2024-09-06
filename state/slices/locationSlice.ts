@@ -3,7 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 interface LocationState {
   latitude: number | null;
   longitude: number | null;
-  mgrs: string | null;
+  mgrs?: string | null;
 }
 
 const initialState: LocationState = {
