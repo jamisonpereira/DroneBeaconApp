@@ -11,10 +11,13 @@ import {
   StatusBar,
 } from 'react-native';
 import { login } from '../services/AuthService'; // Import login function
+import { useDispatch } from 'react-redux'; // Import useDispatch
+import { loginSuccess } from '../state/slices/authSlice'; // Import the loginSuccess action
 
 const LoginScreen = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const dispatch = useDispatch();
 
   const handleLogin = async () => {
     if (!username || !password) {
@@ -23,8 +26,15 @@ const LoginScreen = () => {
     }
 
     try {
-      await login(username, password);
-      Alert.alert('Success', 'Logged in successfully!');
+      // Attempt login
+      const success = await login(username, password);
+
+      if (success) {
+        Alert.alert('Success', 'Logged in successfully!');
+        dispatch(loginSuccess());
+      } else {
+        Alert.alert('Error', 'Invalid username or password. Please try again.');
+      }
     } catch (error) {
       Alert.alert('Error', 'Failed to login. Please try again.');
     }
@@ -40,6 +50,7 @@ const LoginScreen = () => {
         value={username}
         onChangeText={setUsername}
         style={styles.input}
+        autoCapitalize="none" // Prevent capitalization
       />
       <TextInput
         placeholder="Password"
@@ -48,6 +59,7 @@ const LoginScreen = () => {
         onChangeText={setPassword}
         secureTextEntry
         style={styles.input}
+        autoCapitalize="none" // Optional, in case you don't want to capitalize passwords
       />
       <View style={styles.buttonContainer}>
         <Button

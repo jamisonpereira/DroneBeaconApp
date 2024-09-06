@@ -5,8 +5,8 @@ import { getToken } from './AuthService'; // Import secure token retrieval funct
 
 // WebSocket server URL
 const WEBSOCKET_URL =
-  Constants.expoConfig?.extra?.WEBSOCKET_URL ||
-  Constants.manifest?.extra?.WEBSOCKET_URL;
+  Constants.expoConfig?.extra?.NGROK_WSS_URL ||
+  Constants.manifest?.extra?.NGROK_WSS_URL;
 
 const useWebSocket = () => {
   const [isConnected, setIsConnected] = useState(false);

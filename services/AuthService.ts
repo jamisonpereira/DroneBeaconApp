@@ -3,8 +3,8 @@ import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
 
 const HTTPS_URL =
-  Constants.expoConfig?.extra?.HTTPS_URL ||
-  Constants.manifest?.extra?.HTTPS_URL;
+  Constants.expoConfig?.extra?.NGROK_HTTPS_URL ||
+  Constants.manifest?.extra?.NGROK_HTTPS_URL;
 
 // Function to perform login and store JWT token securely
 export const login = async (username: string, password: string) => {
@@ -20,11 +20,14 @@ export const login = async (username: string, password: string) => {
       // Store the token securely using Keychain
       await SecureStore.setItemAsync('jwt_token', response.data.token);
       console.log('Token stored securely');
+      return true; // Indicate login success
     } else {
       console.error('No token received from the server');
+      return false; // Indicate login failure
     }
   } catch (error) {
     console.error('Failed to login:', error);
+    throw new Error('Login failed'); // Throw error to be caught in LoginScreen
   }
 };
 

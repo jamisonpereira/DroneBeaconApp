@@ -1,24 +1,35 @@
 import React, { useEffect, useState } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import { getToken } from '../services/AuthService'; // Import the function to retrieve the token
-import LoginScreen from '../screens/LoginScreen'; // Import your login screen
-import TabNavigator from './TabNavigator'; // Import your existing TabNavigator
+import { getToken } from '../services/AuthService';
+import LoginScreen from '../screens/LoginScreen';
+import TabNavigator from './TabNavigator';
+import { useDispatch, useSelector } from 'react-redux'; // Import useDispatch and useSelector
+import { RootState } from '../state/store'; // Import the RootState type
+import { setAuthentication } from '../state/slices/authSlice'; // Import the action
 
-const Stack = createStackNavigator();
+// export type RootStackParamList = {
+//   Login: undefined; // No params for Login
+//   Main: undefined; // No params for Main
+// };
+
+const Stack = createStackNavigator(); // Use the RootStackParamList type
 
 const AppStackNavigator = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.auth.isAuthenticated
+  ); // Access the auth state
+  const dispatch = useDispatch(); // Initialize dispatch
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const checkAuth = async () => {
       const token = await getToken();
-      setIsAuthenticated(!!token); // Set authentication state based on token existence
+      dispatch(setAuthentication(!!token)); // Update the auth state based on token existence
       setLoading(false); // Set loading to false once the check is complete
     };
 
     checkAuth();
-  }, []);
+  }, [dispatch]);
 
   // Show a loading screen or spinner while checking authentication
   if (loading) {

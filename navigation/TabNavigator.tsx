@@ -3,6 +3,11 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import UnitScreen from '../screens/UnitScreen';
 import BaseScreen from '../screens/BaseScreen';
 
+export type RootTabParamList = {
+  Unit: undefined; // No params for Unit
+  Base: undefined; // No params for Base
+};
+
 const Tab = createBottomTabNavigator();
 
 const TabNavigator: React.FC = () => {
