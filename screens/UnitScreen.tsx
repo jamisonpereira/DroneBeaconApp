@@ -20,6 +20,7 @@ const UnitScreen: React.FC = () => {
   const {
     latitude,
     longitude,
+    altitude,
     mgrs: mgrsCoord,
   } = useSelector((state: RootState) => state.location);
 
@@ -44,9 +45,12 @@ const UnitScreen: React.FC = () => {
 
         let location = await Location.getCurrentPositionAsync({});
         const { latitude, longitude } = location.coords;
+        const altitude = location.coords?.altitude || 0; // TODO: figure out altitude
         const mgrsCoordinate = mgrs.forward([longitude, latitude], 5); // 8-digit precision
 
-        dispatch(setLocation({ latitude, longitude, mgrs: mgrsCoordinate }));
+        dispatch(
+          setLocation({ latitude, longitude, altitude, mgrs: mgrsCoordinate })
+        );
       } catch (error) {
         console.error('Error getting location or converting to MGRS:', error);
       }
@@ -64,6 +68,7 @@ const UnitScreen: React.FC = () => {
       const response = await requestResupply(
         latitude,
         longitude,
+        altitude,
         ['item1', 'item2'],
         'normal'
       );

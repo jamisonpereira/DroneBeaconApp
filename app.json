@@ -27,8 +27,10 @@
     "extra": {
       "WEBSOCKET_URL": "wss://192.168.1.175:3000",
       "HTTPS_URL": "https://192.168.1.175:3000",
-      "NGROK_HTTPS_URL": "https://ace-tapir-settling.ngrok-free.app",
-      "NGROK_WSS_URL": "https://ace-tapir-settling.ngrok-free.app"
+      // "NGROK_HTTPS_URL": "https://ace-tapir-settling.ngrok-free.app",
+      // "NGROK_WSS_URL": "https://ace-tapir-settling.ngrok-free.app"
+      "NGROK_HTTPS_URL": "https://rattler-helped-hawk.ngrok-free.app",
+      "NGROK_WSS_URL": "wss://rattler-helped-hawk.ngrok-free.app"
     }
   }
 }

@@ -38,6 +38,7 @@ apiClient.interceptors.request.use(
 export const requestResupply = async (
   latitude: number | null,
   longitude: number | null,
+  altitude: number | null,
   items?: string[] | null,
   priority?: string | null
 ) => {
@@ -45,6 +46,7 @@ export const requestResupply = async (
     const response = await apiClient.post('/resupply/request', {
       latitude,
       longitude,
+      altitude,
       items,
       priority,
     });
