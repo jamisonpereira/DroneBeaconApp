@@ -1,7 +1,10 @@
+// services/WebSocketService.ts
+
 import Constants from 'expo-constants';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { Alert } from 'react-native';
 import { getToken } from './AuthService'; // Import secure token retrieval function
+import { io, Socket } from 'socket.io-client'; // Import Socket.IO client
 
 // WebSocket server URL
 const WEBSOCKET_URL =
@@ -10,52 +13,76 @@ const WEBSOCKET_URL =
 
 const useWebSocket = () => {
   const [isConnected, setIsConnected] = useState(false);
-  const webSocketRef = useRef<WebSocket | null>(null);
+  const socketRef = useRef<Socket | null>(null);
 
   // Initialize WebSocket connection
-  const initializeWebSocket = async () => {
+  const initializeWebSocket = useCallback(async () => {
     const token = await getToken();
     if (!token) {
       console.error('Token not available, cannot connect to WebSocket');
       return;
     }
 
-    webSocketRef.current = new WebSocket(`${WEBSOCKET_URL}?token=${token}`);
+    console.log(
+      'Connecting to WebSocket with Socket.IO:',
+      WEBSOCKET_URL + '?token=' + token
+    );
 
-    webSocketRef.current.onopen = () => {
-      console.log('WebSocket connection opened');
+    // Use Socket.IO to connect to the server with the token as a query parameter
+    socketRef.current = io(WEBSOCKET_URL, {
+      query: { token },
+      transports: ['websocket'], // Forces WebSocket protocol
+    });
+
+    socketRef.current.on('connect', () => {
+      console.log('Socket.IO connection opened');
       setIsConnected(true);
-    };
+    });
 
-    webSocketRef.current.onmessage = (event) => {
-      console.log('Received message from server:', event.data);
-    };
+    socketRef.current.on('message', (data) => {
+      console.log('Received message from server:', data);
+    });
 
-    webSocketRef.current.onclose = () => {
-      console.log('WebSocket connection closed');
+    socketRef.current.on('disconnect', () => {
+      console.log('Socket.IO connection closed');
       setIsConnected(false);
-      attemptReconnect();
-    };
+    });
 
-    webSocketRef.current.onerror = (error) => {
-      console.error('WebSocket error:', error);
+    socketRef.current.on('error', (error) => {
+      console.error('Socket.IO error:', error);
       setIsConnected(false);
-      attemptReconnect();
-    };
-  };
+    });
 
-  // Function to attempt reconnecting after a delay
-  const attemptReconnect = () => {
-    setTimeout(() => {
-      console.log('Attempting to reconnect...');
-      initializeWebSocket();
-    }, 5000); // Retry every 5 seconds
-  };
+    // Add event listeners for responses from the server
+    socketRef.current.on('test_response', (data) => {
+      console.log('Test Response:', data);
+    });
 
-  // Function to send messages via WebSocket
-  const sendMessage = (message: string) => {
-    if (webSocketRef.current && isConnected) {
-      webSocketRef.current.send(message);
+    socketRef.current.on('landing_permission_response', (data) => {
+      console.log('Landing Permission Response:', data);
+    });
+
+    socketRef.current.on('location_data_response', (data) => {
+      console.log('Location Data Response:', data);
+    });
+
+    socketRef.current.on('return_to_base_response', (data) => {
+      console.log('Return to Base Response:', data);
+    });
+
+    socketRef.current.on('video_feed_response', (data) => {
+      console.log('Video Feed Response:', data);
+    });
+  }, []);
+
+  // Function to send different message types via WebSocket
+  const sendMessage = (messageType: string, payload: Record<string, any>) => {
+    if (socketRef.current && isConnected) {
+      const message = JSON.stringify({
+        type: messageType,
+        ...payload,
+      });
+      socketRef.current.emit('message', message);
       console.log('Message sent:', message);
     } else {
       Alert.alert('Error', 'WebSocket is not connected.');
@@ -66,13 +93,14 @@ const useWebSocket = () => {
   useEffect(() => {
     initializeWebSocket();
     return () => {
-      if (webSocketRef.current) {
-        webSocketRef.current.close();
+      if (socketRef.current) {
+        socketRef.current.disconnect();
       }
     };
   }, []);
 
   return {
+    initializeWebSocket, // Expose initializeWebSocket function
     sendMessage, // Expose sendMessage function
     isConnected, // Expose connection status
   };

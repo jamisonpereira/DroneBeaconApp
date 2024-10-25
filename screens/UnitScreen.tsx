@@ -10,6 +10,7 @@ import { requestResupply } from '../services/ApiService'; // Import the API serv
 import { useNavigation } from '@react-navigation/native'; // Import navigation
 import type { StackNavigationProp } from '@react-navigation/stack';
 import { AppStackParamList } from '../navigation/AppStackNavigator'; // Import the type for navigation
+import useWebSocket from '../services/WebSocketService';
 
 type UnitScreenNavigationProp = StackNavigationProp<AppStackParamList, 'Login'>;
 
@@ -27,6 +28,8 @@ const UnitScreen: React.FC = () => {
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated
   ); // Check authentication state
+
+  const { initializeWebSocket, sendMessage, isConnected } = useWebSocket(); // Use the WebSocket hook
 
   useEffect(() => {
     // If user is not authenticated, navigate to LoginScreen
@@ -86,19 +89,42 @@ const UnitScreen: React.FC = () => {
     }
   };
 
+  const handleWebSocketInit = () => {
+    if (isConnected) {
+      Alert.alert('WebSocket', 'WebSocket is already connected.');
+    } else {
+      initializeWebSocket();
+      // sendMessage('test', { message: 'Initializing WebSocket connection...' });
+    }
+  };
+
+  const handleSendMessage = () => {
+    if (isConnected) {
+      sendMessage('test', { message: 'Hello from UnitScreen!' });
+    }
+  };
+
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" />
-      <Text style={styles.title}>Military Drone Beacon</Text>
+      <Text style={styles.title}>Serra Tech</Text>
       <View style={styles.coordinatesContainer}>
         <Text style={styles.coordinatesText}>
-          Lat: {latitude} Long: {longitude}
+          Lat: {latitude?.toFixed(6)} Long: {longitude?.toFixed(6)}
         </Text>
       </View>
       <Text style={styles.mgrsText}>MGRS: {mgrsCoord}</Text>
       <CommonButton
         onPress={handleResupplyRequest}
         buttonText="Resupply request at this location"
+      />
+      <CommonButton
+        onPress={handleWebSocketInit}
+        buttonText="Initialize WebSocket"
+      />
+      <CommonButton
+        onPress={handleSendMessage}
+        buttonText="Send WebSocket Test Message"
       />
     </View>
   );
