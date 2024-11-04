@@ -13,7 +13,7 @@ import {
 import { login } from '../services/AuthService'; // Import login function
 import { useDispatch } from 'react-redux'; // Import useDispatch
 import { loginSuccess } from '../state/slices/authSlice'; // Import the loginSuccess action
-import CommonButton from '../components/CommonButton';
+import CommonButton from '../components/ui/CommonButton';
 
 const LoginScreen = () => {
   const [username, setUsername] = useState('');
@@ -44,7 +44,7 @@ const LoginScreen = () => {
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" />
-      <Text style={styles.title}>Military Drone Beacon</Text>
+      <Text style={styles.title}>Serra Technologies</Text>
       <TextInput
         placeholder="Username"
         placeholderTextColor="#F0EBD8"

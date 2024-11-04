@@ -14,6 +14,7 @@ const WEBSOCKET_URL =
 const useWebSocket = () => {
   const [isConnected, setIsConnected] = useState(false);
   const socketRef = useRef<Socket | null>(null);
+  const [videoFeed, setVideoFeed] = useState<string | null>(null);
 
   // Initialize WebSocket connection
   const initializeWebSocket = useCallback(async () => {
@@ -70,8 +71,17 @@ const useWebSocket = () => {
       console.log('Return to Base Response:', data);
     });
 
-    socketRef.current.on('video_feed_response', (data) => {
-      console.log('Video Feed Response:', data);
+    socketRef.current.on('video_feed', (data) => {
+      if (data) {
+        console.log('Video Feed Response:', data);
+        setVideoFeed(`data:image/jpeg;base64,${data}`);
+      } else {
+        console.log('Video Feed Response: No data received');
+      }
+    });
+
+    socketRef.current.on('drone_coordinates', (data) => {
+      console.log('Received drone coordinates:', data);
     });
   }, []);
 
@@ -103,6 +113,7 @@ const useWebSocket = () => {
     initializeWebSocket, // Expose initializeWebSocket function
     sendMessage, // Expose sendMessage function
     isConnected, // Expose connection status
+    videoFeed, // Expose video feed data
   };
 };
 

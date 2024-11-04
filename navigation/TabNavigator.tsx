@@ -16,10 +16,12 @@ const TabNavigator: React.FC = () => {
       <Tab.Screen
         name="Unit"
         component={UnitScreen}
+        options={{ headerShown: false }} // Hide the header
       />
       <Tab.Screen
         name="Base"
         component={BaseScreen}
+        options={{ headerShown: false }} // Hide the header
       />
     </Tab.Navigator>
   );
