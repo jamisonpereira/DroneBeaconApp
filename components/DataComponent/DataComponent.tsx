@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
   tabContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    backgroundColor: '#1C2833',
+    // backgroundColor: '#1C2833',
   },
   tabButton: {
     flex: 1,
@@ -70,9 +70,13 @@ const styles = StyleSheet.create({
   },
   activeTab: {
     backgroundColor: '#1C2833', // Duller color for inactive tabs
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
   },
   inactiveTab: {
     backgroundColor: '#3E4C59', // Highlighted color for active tab
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
   },
   activeTabText: {
     color: '#F0EBD8',
@@ -85,5 +89,6 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     backgroundColor: '#1C2833', // Duller color for inactive tabs
+    // marginTop: 10,
   },
 });

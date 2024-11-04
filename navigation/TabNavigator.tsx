@@ -12,7 +12,14 @@ const Tab = createBottomTabNavigator<RootTabParamList>();
 
 const TabNavigator: React.FC = () => {
   return (
-    <Tab.Navigator initialRouteName="Unit">
+    <Tab.Navigator
+      initialRouteName="Unit"
+      screenOptions={{
+        tabBarStyle: {
+          height: 50, // Adjust this value to make the tab bar thinner
+        },
+      }}
+    >
       <Tab.Screen
         name="Unit"
         component={UnitScreen}
