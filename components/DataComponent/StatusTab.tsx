@@ -9,11 +9,13 @@ import OnMissionView from './StatusViews/OnMission';
 import ReturnToBaseView from './StatusViews/ReturnToBase';
 
 const StatusTab: React.FC = () => {
-  // const status = useSelector((state: RootState) => state.location.status);
-  const status = 'ReturnToBase'; // Hardcoded for testing
+  const missionStatus = useSelector(
+    (state: RootState) => state.location.missionStatus
+  );
+  // const status = 'OnMission'; // Hardcoded for testing
 
   const renderStatusView = () => {
-    switch (status) {
+    switch (missionStatus) {
       case 'Standby':
         return <StandbyView />;
       case 'OnMission':

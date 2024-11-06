@@ -4,10 +4,12 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../state/store';
 
 const ReturnToBaseView: React.FC = () => {
-  // const droneLocation = useSelector((state: RootState) => state.drone.location);
-  // const myLocation = useSelector((state: RootState) => state.user.location);
-  // const distanceToDrone = useSelector((state: RootState) => state.drone.distanceToUser);
-  // const droneCharge = useSelector((state: RootState) => state.drone.charge);
+  const droneMgrs = useSelector((state: RootState) => state.location.droneMgrs);
+  const myMgrs = useSelector((state: RootState) => state.location.myMgrs);
+  const baseMgrs = useSelector((state: RootState) => state.location.baseMgrs);
+  const distanceMeToDrone = useSelector(
+    (state: RootState) => state.location.distanceMeToDrone
+  )?.toFixed(1);
 
   return (
     <View style={styles.container}>
@@ -33,15 +35,15 @@ const ReturnToBaseView: React.FC = () => {
       <View style={styles.dataContainer}>
         <View style={styles.row}>
           <Text style={styles.label}>Drone location:</Text>
-          <Text style={styles.data}>XXXXXXX</Text>
+          <Text style={styles.data}>{droneMgrs}</Text>
         </View>
         <View style={styles.row}>
           <Text style={styles.label}>My location:</Text>
-          <Text style={styles.data}>XXXXXXX</Text>
+          <Text style={styles.data}>{myMgrs}</Text>
         </View>
         <View style={styles.row}>
           <Text style={styles.label}>Base location:</Text>
-          <Text style={styles.data}>XXXXXXX</Text>
+          <Text style={styles.data}>{baseMgrs}</Text>
         </View>
         <View style={styles.row}>
           <Text style={styles.label}>Distance to base:</Text>

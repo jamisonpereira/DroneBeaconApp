@@ -5,6 +5,35 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import { Alert } from 'react-native';
 import { getToken } from './AuthService'; // Import secure token retrieval function
 import { io, Socket } from 'socket.io-client'; // Import Socket.IO client
+import { useDispatch } from 'react-redux';
+import {
+  setDroneLocation,
+  setMyLocation,
+  setBaseLocation,
+  setDistanceMeToDrone,
+} from '../state/slices/locationSlice';
+import * as mgrs from 'mgrs';
+
+function formatMgrs(mgrsString: string): string {
+  const regex =
+    /^(\d{1,2})([C-X])([A-HJ-NP-Z]{2})(\d{2})(\d{2})(\d{2})(\d{2})$/;
+  const match = mgrsString.match(regex);
+  if (match) {
+    const [
+      _,
+      zoneNumber,
+      zoneLetter,
+      squareIdentifier,
+      easting1,
+      easting2,
+      northing1,
+      northing2,
+    ] = match;
+    return `${squareIdentifier} ${easting1}${easting2} ${northing1}${northing2}`;
+    // return `${zoneNumber}${zoneLetter} ${squareIdentifier} ${easting1}${easting2} ${northing1}${northing2}`;
+  }
+  return mgrsString;
+}
 
 // WebSocket server URL
 const WEBSOCKET_URL =
@@ -15,6 +44,7 @@ const useWebSocket = () => {
   const [isConnected, setIsConnected] = useState(false);
   const socketRef = useRef<Socket | null>(null);
   const [videoFeed, setVideoFeed] = useState<string | null>(null);
+  const dispatch = useDispatch();
 
   // Landing request callback (UI can register this to handle landing requests)
   const landingRequestCallbackRef = useRef<(data: any) => void>();
@@ -70,6 +100,68 @@ const useWebSocket = () => {
       }
     });
 
+    socketRef.current.on('drone_coordinates', (data) => {
+      console.log('Drone Coordinates:', data);
+      const {
+        lat: droneLatitude,
+        long: droneLongitude,
+        alt: droneAltitude,
+      } = data;
+      const droneMgrs = formatMgrs(
+        mgrs.forward([droneLongitude, droneLatitude], 4)
+      );
+      console.log('Drone MGRS:', droneMgrs);
+
+      dispatch(
+        setDroneLocation({
+          droneLatitude,
+          droneLongitude,
+          droneAltitude,
+          droneMgrs,
+        })
+      );
+    });
+
+    socketRef.current.on('my_coordinates', (data) => {
+      console.log('My Coordinates:', data);
+      const { lat: myLatitude, long: myLongitude, alt: myAltitude } = data;
+      const myMgrs = formatMgrs(mgrs.forward([myLongitude, myLatitude], 4));
+      dispatch(
+        setMyLocation({
+          myLatitude,
+          myLongitude,
+          myAltitude,
+          myMgrs,
+        })
+      );
+    });
+
+    socketRef.current.on('base_coordinates', (data) => {
+      console.log('Base Coordinates:', data);
+      const {
+        lat: baseLatitude,
+        long: baseLongitude,
+        alt: baseAltitude,
+      } = data;
+      const baseMgrs = formatMgrs(
+        mgrs.forward([baseLongitude, baseLatitude], 4)
+      );
+      dispatch(
+        setBaseLocation({
+          baseLatitude,
+          baseLongitude,
+          baseAltitude,
+          baseMgrs,
+        })
+      );
+    });
+
+    socketRef.current.on('distance_me_to_drone', (data) => {
+      console.log('Distance Me to Drone:', data);
+      const distanceMeToDrone = data;
+      dispatch(setDistanceMeToDrone({ distanceMeToDrone }));
+    });
+
     socketRef.current.on('location_data_response', (data) => {
       console.log('Location Data Response:', data);
     });
@@ -85,10 +177,6 @@ const useWebSocket = () => {
       } else {
         console.log('Video Feed Response: No data received');
       }
-    });
-
-    socketRef.current.on('drone_coordinates', (data) => {
-      console.log('Received drone coordinates:', data);
     });
   }, []);
 

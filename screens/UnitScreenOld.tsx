@@ -5,7 +5,7 @@ import CommonButton from '../components/ui/CommonButton';
 import * as Location from 'expo-location';
 import * as mgrs from 'mgrs';
 import { RootState } from '../state/store';
-import { setLocation } from '../state/slices/locationSlice';
+// import { setLocation } from '../state/slices/locationSlice';
 import { requestResupply } from '../services/ApiService'; // Import the API service function
 import { useNavigation } from '@react-navigation/native'; // Import navigation
 import type { StackNavigationProp } from '@react-navigation/stack';
@@ -18,12 +18,12 @@ const UnitScreen: React.FC = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation<UnitScreenNavigationProp>(); // Type the navigation
 
-  const {
-    latitude,
-    longitude,
-    altitude,
-    mgrs: mgrsCoord,
-  } = useSelector((state: RootState) => state.location);
+  // const {
+  //   latitude,
+  //   longitude,
+  //   altitude,
+  //   mgrs: mgrsCoord,
+  // } = useSelector((state: RootState) => state.location);
 
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated
@@ -52,9 +52,9 @@ const UnitScreen: React.FC = () => {
         const altitude = location.coords?.altitude || 0; // TODO: figure out altitude
         const mgrsCoordinate = mgrs.forward([longitude, latitude], 5); // 8-digit precision
 
-        dispatch(
-          setLocation({ latitude, longitude, altitude, mgrs: mgrsCoordinate })
-        );
+        // dispatch(
+        //   setLocation({ latitude, longitude, altitude, mgrs: mgrsCoordinate })
+        // );
       } catch (error) {
         console.error('Error getting location or converting to MGRS:', error);
       }
@@ -63,23 +63,23 @@ const UnitScreen: React.FC = () => {
 
   const handleResupplyRequest = async () => {
     try {
-      console.log('Sending resupply request with location:', {
-        latitude,
-        longitude,
-      });
+      // console.log('Sending resupply request with location:', {
+      //   latitude,
+      //   longitude,
+      // });
 
       // Call the API service to make the resupply request
-      const response = await requestResupply(
-        latitude,
-        longitude,
-        altitude,
-        ['item1', 'item2'],
-        'normal'
-      );
+      // const response = await requestResupply(
+      //   // latitude,
+      //   // longitude,
+      //   // altitude,
+      //   ['item1', 'item2'],
+      //   'normal'
+      // );
 
       Alert.alert(
-        'Resupply Request',
-        'Request sent successfully! Message: ' + response.message
+        'Resupply Request'
+        // 'Request sent successfully! Message: ' + response.message
       );
     } catch (error) {
       console.error('Failed to send resupply request:', error);
@@ -111,10 +111,10 @@ const UnitScreen: React.FC = () => {
       <Text style={styles.title}>Serra Tech</Text>
       <View style={styles.coordinatesContainer}>
         <Text style={styles.coordinatesText}>
-          Lat: {latitude?.toFixed(6)} Long: {longitude?.toFixed(6)}
+          {/* Lat: {latitude?.toFixed(6)} Long: {longitude?.toFixed(6)} */}
         </Text>
       </View>
-      <Text style={styles.mgrsText}>MGRS: {mgrsCoord}</Text>
+      {/* <Text style={styles.mgrsText}>MGRS: {mgrsCoord}</Text> */}
       <CommonButton
         onPress={handleResupplyRequest}
         buttonText="Resupply request at this location"

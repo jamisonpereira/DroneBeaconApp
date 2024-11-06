@@ -6,13 +6,13 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import { useDispatch, useSelector } from 'react-redux';
 import CommonButton from './ui/CommonButton';
 import { RootState } from '../state/store';
-import { setLocation } from '../state/slices/locationSlice';
+import { setMyLocation } from '../state/slices/locationSlice';
 import { requestResupply } from '../services/ApiService';
 import useWebSocket from '../services/WebSocketService';
 
 const ControlsComponent: React.FC = () => {
   const dispatch = useDispatch();
-  const { latitude, longitude, altitude } = useSelector(
+  const { myLatitude, myLongitude, myAltitude } = useSelector(
     (state: RootState) => state.location
   );
   const { initializeWebSocket, sendMessage, isConnected, onLandingRequest } =
@@ -38,9 +38,9 @@ const ControlsComponent: React.FC = () => {
     }
     try {
       const response = await requestResupply(
-        latitude,
-        longitude,
-        altitude,
+        myLatitude,
+        myLongitude,
+        myAltitude,
         ['item1', 'item2'],
         'normal'
       );
