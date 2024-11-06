@@ -9,6 +9,7 @@ import {
   Alert,
   StyleSheet,
   StatusBar,
+  Image,
 } from 'react-native';
 import { login } from '../services/AuthService'; // Import login function
 import { useDispatch } from 'react-redux'; // Import useDispatch
@@ -44,7 +45,11 @@ const LoginScreen = () => {
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" />
-      <Text style={styles.title}>Serra Technologies</Text>
+      <Image
+        source={require('../assets/Serra Logo_WhiteTransparent.png')}
+        style={styles.logo}
+        resizeMode="contain"
+      />
       <TextInput
         placeholder="Username"
         placeholderTextColor="#F0EBD8"
@@ -84,25 +89,24 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
     padding: 20,
-    paddingTop: 60,
+    paddingTop: 20,
   },
-  title: {
-    fontSize: 24,
-    color: '#F0EBD8',
+  logo: {
+    width: 400, // Adjust this as needed for the correct look
+    height: 100, // Adjust this as needed for the correct look
     marginBottom: 20,
-    fontWeight: 'bold',
   },
   input: {
-    width: '100%',
     padding: 10,
     borderWidth: 1,
     borderColor: '#F0EBD8',
     borderRadius: 5,
     marginBottom: 20,
     color: '#F0EBD8',
+    width: 400,
   },
   buttonContainer: {
-    width: '100%',
+    width: 400,
     marginTop: 20,
   },
 });

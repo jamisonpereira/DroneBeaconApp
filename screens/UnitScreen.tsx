@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, StatusBar } from 'react-native';
+import { View, Image, StyleSheet, StatusBar } from 'react-native';
 import ControlsComponent from '../components/ControlsComponent';
 import DataComponent from '../components/DataComponent/DataComponent';
 
@@ -10,7 +10,11 @@ const UnitScreen: React.FC = () => {
 
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.headerText}>Serra Technologies</Text>
+        <Image
+          source={require('../assets/Serra Logo_WhiteTransparent.png')}
+          style={styles.logo}
+          resizeMode="contain"
+        />
       </View>
 
       {/* Main Content */}
@@ -35,17 +39,18 @@ const styles = StyleSheet.create({
   },
   header: {
     alignItems: 'center',
-    padding: 10,
+    padding: 0,
     backgroundColor: '#2E3B4E',
   },
-  headerText: {
-    fontSize: 24,
-    color: '#F0EBD8',
-    fontWeight: 'bold',
+  logo: {
+    width: 200, // Adjust as needed
+    height: 80, // Adjust as needed
   },
   contentContainer: {
     flex: 1,
     flexDirection: 'row',
+    marginTop: -20,
+    marginBottom: 10,
   },
   leftSide: {
     flex: 1,

@@ -5,6 +5,7 @@ interface LocationState {
   longitude: number | null;
   altitude: number | null;
   mgrs?: string | null;
+  status: 'Standby' | 'OnMission' | 'ReturnToBase';
 }
 
 const initialState: LocationState = {
@@ -12,6 +13,7 @@ const initialState: LocationState = {
   longitude: null,
   altitude: null,
   mgrs: null,
+  status: 'Standby',
 };
 
 const locationSlice = createSlice({

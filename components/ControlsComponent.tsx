@@ -1,6 +1,6 @@
 // /components/ControlsComponent.tsx
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Alert, Switch, StyleSheet, Text } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { useDispatch, useSelector } from 'react-redux';
@@ -15,7 +15,8 @@ const ControlsComponent: React.FC = () => {
   const { latitude, longitude, altitude } = useSelector(
     (state: RootState) => state.location
   );
-  const { initializeWebSocket, sendMessage, isConnected } = useWebSocket();
+  const { initializeWebSocket, sendMessage, isConnected, onLandingRequest } =
+    useWebSocket();
 
   const [selectedDrone, setSelectedDrone] = useState('Drone 1');
   const [trackDrone, setTrackDrone] = useState(true);
@@ -43,10 +44,10 @@ const ControlsComponent: React.FC = () => {
         ['item1', 'item2'],
         'normal'
       );
-      Alert.alert(
-        'Resupply Request',
-        'Request sent successfully! Message: ' + response.message
-      );
+      // Alert.alert(
+      //   'Resupply Request',
+      //   'Request sent successfully! Message: ' + response.message
+      // );
     } catch (error) {
       console.error('Failed to send resupply request:', error);
       Alert.alert(
@@ -56,19 +57,7 @@ const ControlsComponent: React.FC = () => {
     }
   };
 
-  const handleWebSocketInit = () => {
-    if (!webSocketEnabled) {
-      showDisabledAlert();
-      return;
-    }
-    if (isConnected) {
-      Alert.alert('WebSocket', 'WebSocket is already connected.');
-    } else {
-      initializeWebSocket();
-    }
-  };
-
-  const handleSendMessage = () => {
+  const handleReturnToBase = () => {
     if (!sendMessageEnabled) {
       showDisabledAlert();
       return;
@@ -81,6 +70,40 @@ const ControlsComponent: React.FC = () => {
   const showDisabledAlert = () => {
     Alert.alert('Button Disabled', 'This feature is currently disabled.');
   };
+
+  useEffect(() => {
+    // Register the landing request callback
+    onLandingRequest((data) => {
+      Alert.alert(
+        'Landing Request',
+        'The drone is requesting permission to land. Do you approve?',
+        [
+          {
+            text: 'Approve',
+            onPress: () => {
+              sendMessage('landing_permission', {
+                drone_id: data.drone_id,
+                response: 'approved',
+                timestamp: new Date().toISOString(),
+              });
+            },
+          },
+          {
+            text: 'Deny',
+            onPress: () => {
+              sendMessage('landing_permission', {
+                drone_id: data.drone_id,
+                response: 'denied',
+                timestamp: new Date().toISOString(),
+              });
+            },
+            style: 'cancel',
+          },
+        ],
+        { cancelable: false }
+      );
+    });
+  }, [onLandingRequest, sendMessage]);
 
   return (
     <View style={styles.container}>
@@ -120,14 +143,9 @@ const ControlsComponent: React.FC = () => {
         disabled={!resupplyEnabled}
       />
       <CommonButton
-        onPress={handleWebSocketInit}
-        buttonText="Initialize WebSocket"
+        onPress={handleReturnToBase}
+        buttonText="Return to Base"
         disabled={!webSocketEnabled}
-      />
-      <CommonButton
-        onPress={handleSendMessage}
-        buttonText="Send WebSocket Test Message"
-        disabled={!sendMessageEnabled}
       />
     </View>
   );
@@ -149,7 +167,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between', // Space between label and dropdown
-    marginBottom: 10,
+    marginBottom: 15,
+    paddingHorizontal: 30,
     zIndex: 1000, // Ensures dropdown opens on top of other elements
   },
   dropdownLabel: {
@@ -177,7 +196,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between', // Space between label and dropdown
-    marginBottom: 20,
+    marginBottom: 15,
+    paddingHorizontal: 30,
   },
   trackText: {
     color: '#FFF',

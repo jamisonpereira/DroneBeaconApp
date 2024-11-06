@@ -14,11 +14,20 @@ const TabNavigator: React.FC = () => {
   return (
     <Tab.Navigator
       initialRouteName="Unit"
-      screenOptions={{
+      screenOptions={({ route }) => ({
         tabBarStyle: {
           height: 50, // Adjust this value to make the tab bar thinner
+          backgroundColor: '#1C2833', // Set tab bar background color
         },
-      }}
+        tabBarActiveTintColor: 'white', // Color of the active tab text (gold)
+        tabBarInactiveTintColor: '#888888', // Color of the inactive tab text (light beige)
+        tabBarLabelStyle: {
+          fontSize: 14,
+          fontWeight: route.name === route.name ? 'bold' : 'normal', // Make active tab bold
+        },
+        // tabBarActiveBackgroundColor: '#3C4C61', // Background color of the active tab
+        // tabBarInactiveBackgroundColor: '#2E3B4E', // Background color of inactive tabs
+      })}
     >
       <Tab.Screen
         name="Unit"

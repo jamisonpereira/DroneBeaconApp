@@ -16,6 +16,9 @@ const useWebSocket = () => {
   const socketRef = useRef<Socket | null>(null);
   const [videoFeed, setVideoFeed] = useState<string | null>(null);
 
+  // Landing request callback (UI can register this to handle landing requests)
+  const landingRequestCallbackRef = useRef<(data: any) => void>();
+
   // Initialize WebSocket connection
   const initializeWebSocket = useCallback(async () => {
     const token = await getToken();
@@ -59,8 +62,12 @@ const useWebSocket = () => {
       console.log('Test Response:', data);
     });
 
-    socketRef.current.on('landing_permission_response', (data) => {
-      console.log('Landing Permission Response:', data);
+    // Add event listeners for responses from the server
+    socketRef.current.on('landing_request', (data) => {
+      console.log('Landing Request:', data);
+      if (landingRequestCallbackRef.current) {
+        landingRequestCallbackRef.current(data);
+      }
     });
 
     socketRef.current.on('location_data_response', (data) => {
@@ -73,7 +80,7 @@ const useWebSocket = () => {
 
     socketRef.current.on('video_feed', (data) => {
       if (data) {
-        console.log('Video Feed Response:', data);
+        // console.log('Video Feed Response:', data);
         setVideoFeed(`data:image/jpeg;base64,${data}`);
       } else {
         console.log('Video Feed Response: No data received');
@@ -99,6 +106,11 @@ const useWebSocket = () => {
     }
   };
 
+  // Function to register a callback for landing requests
+  const onLandingRequest = (callback: (data: any) => void) => {
+    landingRequestCallbackRef.current = callback;
+  };
+
   // Cleanup WebSocket connection on component unmount
   useEffect(() => {
     initializeWebSocket();
@@ -114,6 +126,7 @@ const useWebSocket = () => {
     sendMessage, // Expose sendMessage function
     isConnected, // Expose connection status
     videoFeed, // Expose video feed data
+    onLandingRequest, // Expose landing request callback registration
   };
 };
 
