@@ -9,6 +9,10 @@ const StandbyView: React.FC = () => {
   const distanceMeToDrone = useSelector(
     (state: RootState) => state.location.distanceMeToDrone
   )?.toFixed(1);
+  const droneStatus = useSelector(
+    (state: RootState) => state.location.droneStatus
+  );
+  const battery = useSelector((state: RootState) => state.location.battery);
 
   return (
     <View style={styles.container}>
@@ -23,7 +27,9 @@ const StandbyView: React.FC = () => {
           <Text style={[styles.label, { fontWeight: 'bold' }]}>
             Drone status:
           </Text>
-          <Text style={[styles.data, { fontWeight: 'bold' }]}>Landed</Text>
+          <Text style={[styles.data, { fontWeight: 'bold' }]}>
+            {droneStatus}
+          </Text>
         </View>
       </View>
       <View style={styles.dataContainer}>
@@ -37,11 +43,19 @@ const StandbyView: React.FC = () => {
         </View>
         <View style={styles.row}>
           <Text style={styles.label}>Distance to drone:</Text>
-          <Text style={styles.data}>{distanceMeToDrone} meters</Text>
+          {distanceMeToDrone ? (
+            <Text style={styles.data}>{distanceMeToDrone} meters</Text>
+          ) : (
+            <Text style={styles.data}>-</Text>
+          )}
         </View>
         <View style={styles.row}>
           <Text style={styles.label}>Drone charge:</Text>
-          <Text style={styles.data}>XX%</Text>
+          {battery ? (
+            <Text style={styles.data}>{battery}%</Text>
+          ) : (
+            <Text style={styles.data}>-</Text>
+          )}
         </View>
       </View>
     </View>

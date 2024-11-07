@@ -9,6 +9,13 @@ const OnMissionView: React.FC = () => {
   const distanceMeToDrone = useSelector(
     (state: RootState) => state.location.distanceMeToDrone
   )?.toFixed(1);
+  const droneStatus = useSelector(
+    (state: RootState) => state.location.droneStatus
+  );
+  const speed = useSelector(
+    (state: RootState) => state.location.speed
+  )?.toFixed(1);
+  const battery = useSelector((state: RootState) => state.location.battery);
 
   return (
     <View style={styles.container}>
@@ -24,8 +31,7 @@ const OnMissionView: React.FC = () => {
             Drone status:
           </Text>
           <Text style={[styles.data, { fontWeight: 'bold' }]}>
-            Awaiting takeoff
-            {/* update to include flying, loitering, and landing */}
+            {droneStatus}
           </Text>
         </View>
       </View>
@@ -40,15 +46,23 @@ const OnMissionView: React.FC = () => {
         </View>
         <View style={styles.row}>
           <Text style={styles.label}>Distance to drone:</Text>
-          <Text style={styles.data}>{distanceMeToDrone} meters</Text>
+          {distanceMeToDrone ? (
+            <Text style={styles.data}>{distanceMeToDrone} meters</Text>
+          ) : (
+            <Text style={styles.data}>-</Text>
+          )}
         </View>
         <View style={styles.row}>
           <Text style={styles.label}>Speed:</Text>
-          <Text style={styles.data}>XX meters / second</Text>
+          <Text style={styles.data}>{speed} meters / second</Text>
         </View>
         <View style={styles.row}>
           <Text style={styles.label}>Drone charge:</Text>
-          <Text style={styles.data}>XX%</Text>
+          {battery ? (
+            <Text style={styles.data}>{battery}%</Text>
+          ) : (
+            <Text style={styles.data}>-</Text>
+          )}
         </View>
       </View>
     </View>

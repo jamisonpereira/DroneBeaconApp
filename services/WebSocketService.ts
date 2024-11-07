@@ -11,6 +11,10 @@ import {
   setMyLocation,
   setBaseLocation,
   setDistanceMeToDrone,
+  setMissionStatus,
+  setDroneStatus,
+  setSpeed,
+  setBattery,
 } from '../state/slices/locationSlice';
 import * as mgrs from 'mgrs';
 
@@ -162,8 +166,26 @@ const useWebSocket = () => {
       dispatch(setDistanceMeToDrone({ distanceMeToDrone }));
     });
 
-    socketRef.current.on('location_data_response', (data) => {
-      console.log('Location Data Response:', data);
+    socketRef.current.on('mission_status', (data) => {
+      console.log('Mission Status Response:', data);
+      const { status: missionStatus } = data;
+      dispatch(setMissionStatus({ missionStatus }));
+    });
+
+    socketRef.current.on('drone_status', (data) => {
+      console.log('Drone Status Response:', data);
+      const { status: droneStatus } = data;
+      dispatch(setDroneStatus({ droneStatus }));
+    });
+
+    socketRef.current.on('speed', (data) => {
+      console.log('Speed response:', data);
+      dispatch(setSpeed({ speed: data }));
+    });
+
+    socketRef.current.on('battery', (data) => {
+      console.log('Battery response:', data);
+      dispatch(setBattery({ battery: data }));
     });
 
     socketRef.current.on('return_to_base_response', (data) => {

@@ -15,6 +15,7 @@ const StatusTab: React.FC = () => {
   // const status = 'OnMission'; // Hardcoded for testing
 
   const renderStatusView = () => {
+    console.log('StatusTab: missionStatus:', missionStatus);
     switch (missionStatus) {
       case 'Standby':
         return <StandbyView />;
@@ -40,6 +41,5 @@ const styles = StyleSheet.create({
   },
   text: {
     color: '#F0EBD8',
-    fontSize: 18,
   },
 });

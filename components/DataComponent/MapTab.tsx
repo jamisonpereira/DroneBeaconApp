@@ -4,7 +4,7 @@ import { View, Text, StyleSheet } from 'react-native';
 const MapTab: React.FC = () => {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Map Content</Text>
+      <Text style={styles.text}>Map unavailable</Text>
     </View>
   );
 };
@@ -19,6 +19,5 @@ const styles = StyleSheet.create({
   },
   text: {
     color: '#F0EBD8',
-    fontSize: 18,
   },
 });

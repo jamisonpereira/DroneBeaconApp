@@ -14,7 +14,10 @@ interface LocationState {
   baseAltitude: number | null;
   baseMgrs?: string | null;
   missionStatus: 'Standby' | 'OnMission' | 'ReturnToBase';
+  droneStatus?: string;
   distanceMeToDrone?: number | null;
+  speed?: number | null;
+  battery?: number | null;
 }
 
 const initialState: LocationState = {
@@ -30,8 +33,11 @@ const initialState: LocationState = {
   baseLongitude: null,
   baseAltitude: null,
   baseMgrs: null,
-  missionStatus: 'ReturnToBase',
+  missionStatus: 'Standby',
+  droneStatus: 'Landed',
   distanceMeToDrone: null,
+  speed: null,
+  battery: null,
 };
 
 const locationSlice = createSlice({
@@ -85,7 +91,28 @@ const locationSlice = createSlice({
       state,
       action: PayloadAction<{ distanceMeToDrone: number }>
     ) => {
-      state.distanceMeToDrone = action.payload.distanceMeToDrone;
+      if (action.payload.distanceMeToDrone > 100000) {
+        state.distanceMeToDrone = null;
+      } else {
+        state.distanceMeToDrone = action.payload.distanceMeToDrone;
+      }
+    },
+    setMissionStatus: (
+      state,
+      action: PayloadAction<{
+        missionStatus: 'Standby' | 'OnMission' | 'ReturnToBase';
+      }>
+    ) => {
+      state.missionStatus = action.payload.missionStatus;
+    },
+    setDroneStatus: (state, action: PayloadAction<{ droneStatus: string }>) => {
+      state.droneStatus = action.payload.droneStatus;
+    },
+    setSpeed: (state, action: PayloadAction<{ speed: number }>) => {
+      state.speed = action.payload.speed;
+    },
+    setBattery: (state, action: PayloadAction<{ battery: number }>) => {
+      state.battery = action.payload.battery;
     },
   },
 });
@@ -95,6 +122,10 @@ export const {
   setMyLocation,
   setBaseLocation,
   setDistanceMeToDrone,
+  setMissionStatus,
+  setDroneStatus,
+  setSpeed,
+  setBattery,
 } = locationSlice.actions;
 
 export default locationSlice.reducer;
