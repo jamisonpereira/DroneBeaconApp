@@ -55,6 +55,8 @@ const locationSlice = createSlice({
     ) => {
       state.droneLatitude = action.payload.droneLatitude;
       state.droneLongitude = action.payload.droneLongitude;
+      state.droneAltitude =
+        action.payload.droneAltitude < 0 ? 0 : action.payload.droneAltitude;
       state.droneMgrs = action.payload.droneMgrs
         ? action.payload.droneMgrs
         : null;
@@ -70,7 +72,8 @@ const locationSlice = createSlice({
     ) => {
       state.myLatitude = action.payload.myLatitude;
       state.myLongitude = action.payload.myLongitude;
-      state.myAltitude = action.payload.myAltitude;
+      state.myAltitude =
+        action.payload.myAltitude < 0 ? 0 : action.payload.myAltitude;
       state.myMgrs = action.payload.myMgrs ? action.payload.myMgrs : null;
     },
     setBaseLocation: (
@@ -84,7 +87,8 @@ const locationSlice = createSlice({
     ) => {
       state.baseLatitude = action.payload.baseLatitude;
       state.baseLongitude = action.payload.baseLongitude;
-      state.baseAltitude = action.payload.baseAltitude;
+      state.baseAltitude =
+        action.payload.baseAltitude < 0 ? 0 : action.payload.baseAltitude;
       state.baseMgrs = action.payload.baseMgrs ? action.payload.baseMgrs : null;
     },
     setDistanceMeToDrone: (

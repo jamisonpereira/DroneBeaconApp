@@ -5,6 +5,9 @@ import { RootState } from '../../../state/store';
 
 const StandbyView: React.FC = () => {
   const droneMgrs = useSelector((state: RootState) => state.location.droneMgrs);
+  const droneAltitude = useSelector(
+    (state: RootState) => state.location.droneAltitude
+  )?.toFixed(1);
   const myMgrs = useSelector((state: RootState) => state.location.myMgrs);
   const distanceMeToDrone = useSelector(
     (state: RootState) => state.location.distanceMeToDrone
@@ -35,7 +38,9 @@ const StandbyView: React.FC = () => {
       <View style={styles.dataContainer}>
         <View style={styles.row}>
           <Text style={styles.label}>Drone location:</Text>
-          <Text style={styles.data}>{droneMgrs}</Text>
+          <Text style={styles.data}>
+            {droneMgrs} (Alt: {droneAltitude})
+          </Text>
         </View>
         <View style={styles.row}>
           <Text style={styles.label}>My location:</Text>

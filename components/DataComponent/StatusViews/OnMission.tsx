@@ -5,6 +5,9 @@ import { RootState } from '../../../state/store';
 
 const OnMissionView: React.FC = () => {
   const droneMgrs = useSelector((state: RootState) => state.location.droneMgrs);
+  const droneAltitude = useSelector(
+    (state: RootState) => state.location.droneAltitude
+  )?.toFixed(1);
   const myMgrs = useSelector((state: RootState) => state.location.myMgrs);
   const distanceMeToDrone = useSelector(
     (state: RootState) => state.location.distanceMeToDrone
@@ -16,6 +19,8 @@ const OnMissionView: React.FC = () => {
     (state: RootState) => state.location.speed
   )?.toFixed(1);
   const battery = useSelector((state: RootState) => state.location.battery);
+
+  console.log('altitude: ', droneAltitude);
 
   return (
     <View style={styles.container}>
@@ -38,7 +43,9 @@ const OnMissionView: React.FC = () => {
       <View style={styles.dataContainer}>
         <View style={styles.row}>
           <Text style={styles.label}>Drone location:</Text>
-          <Text style={styles.data}>{droneMgrs}</Text>
+          <Text style={styles.data}>
+            {droneMgrs} (Alt: {droneAltitude})
+          </Text>
         </View>
         <View style={styles.row}>
           <Text style={styles.label}>My location:</Text>

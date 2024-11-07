@@ -114,7 +114,6 @@ const useWebSocket = () => {
       const droneMgrs = formatMgrs(
         mgrs.forward([droneLongitude, droneLatitude], 4)
       );
-      console.log('Drone MGRS:', droneMgrs);
 
       dispatch(
         setDroneLocation({
