@@ -71,39 +71,40 @@ const ControlsComponent: React.FC = () => {
     Alert.alert('Button Disabled', 'This feature is currently disabled.');
   };
 
-  useEffect(() => {
-    // Register the landing request callback
-    onLandingRequest((data) => {
-      Alert.alert(
-        'Landing Request',
-        'The drone is requesting permission to land. Do you approve?',
-        [
-          {
-            text: 'Approve',
-            onPress: () => {
-              sendMessage('landing_permission', {
-                drone_id: data.drone_id,
-                response: 'approved',
-                timestamp: new Date().toISOString(),
-              });
-            },
-          },
-          {
-            text: 'Deny',
-            onPress: () => {
-              sendMessage('landing_permission', {
-                drone_id: data.drone_id,
-                response: 'denied',
-                timestamp: new Date().toISOString(),
-              });
-            },
-            style: 'cancel',
-          },
-        ],
-        { cancelable: false }
-      );
-    });
-  }, [onLandingRequest, sendMessage]);
+  // useEffect(() => {
+  //   // Register the landing request callback
+  //   onLandingRequest((data) => {
+  //     Alert.alert(
+  //       'Landing Request',
+  //       'The drone is requesting permission to land. Do you approve?',
+  //       [
+  //         {
+  //           text: 'Approve',
+  //           onPress: () => {
+  //             console.log('Approving landing request...');
+  //             sendMessage('landing_permission', {
+  //               drone_id: data.drone_id,
+  //               response: 'approved',
+  //               timestamp: new Date().toISOString(),
+  //             });
+  //           },
+  //         },
+  //         {
+  //           text: 'Deny',
+  //           onPress: () => {
+  //             sendMessage('landing_permission', {
+  //               drone_id: data.drone_id,
+  //               response: 'denied',
+  //               timestamp: new Date().toISOString(),
+  //             });
+  //           },
+  //           style: 'cancel',
+  //         },
+  //       ],
+  //       { cancelable: false }
+  //     );
+  //   });
+  // }, [onLandingRequest, sendMessage]);
 
   return (
     <View style={styles.container}>
